@@ -9,7 +9,7 @@
 
 #define CAN_BAUDRATE 1000000
 #define MY_ID 0x01
-#define REQ_TIMEOUT 100
+#define REQ_TIMEOUT 500
 
 enum {
   sensor1   = 0x11,
