@@ -27,7 +27,7 @@ void Sensors::update() {
   CAN_message_t msg;
 
   if(canBus.read(msg) && msg.id == MY_ID && 
-      (msg.buf[0] == alarmGiallo || msg.buf[0] == alarmRosso)) {
+      (msg.buf[0] == ALARM_ROSSO || msg.buf[0] == ALARM_GIALLO)) {
     callback(msg.buf[0],msg.buf[1]);
   }
 }
@@ -51,7 +51,7 @@ void Sensors::sendSoglia(int sensorId, soglie_t soglia) {
   CAN_message_t msg;
 
   msg.id = sensorId;
-  msg.buf[0] = cmdSendSoglia;
+  msg.buf[0] = SET_SOGLIE;
   msg.buf[1] = soglia.sogliaGiallo >> 8;
   msg.buf[2] = soglia.sogliaGiallo;
   msg.buf[3] = soglia.sogliaRosso >> 8;
@@ -76,13 +76,13 @@ dist_t Sensors::requestDistance(int sensorId) {
   dist_t distanza;
 
   msg.id = sensorId;
-  msg.buf[0] = cmdReqDist;
+  msg.buf[0] = DIST_REQUEST;
 
   canBus.write(msg);
 
   long startTime = millis();
 
-  while(!canBus.read(msg) && msg.id == MY_ID && msg.buf[0] == cmdAnsDist && msg.buf[1] == sensorId) {
+  while(!canBus.read(msg) && msg.id == MY_ID && msg.buf[0] == DIST_ANS && msg.buf[1] == sensorId) {
     if(millis() - startTime > REQ_TIMEOUT) {
       return DIST_ERR;
     }
