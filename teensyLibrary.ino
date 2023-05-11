@@ -39,11 +39,11 @@ void loop() {
 
 // funzione di callback, richiamata quando si riceve un allarme
 void alarmCallback(int sensorId, int soglia){
-  if(soglia == alarmGiallo) {
+  if(soglia == ALARM_GIALLO) {
     Serial.print("Ricevuto allarme giallo da sensore: ");
     Serial.println(sensorId);
   }
-  else if(soglia == alarmRosso) {
+  else if(soglia == ALARM_ROSSO) {
     Serial.print("Ricevuto allarme rosso da sensore: ");
     Serial.println(sensorId);
   }
