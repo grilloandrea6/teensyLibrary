@@ -100,4 +100,3 @@ dist_t Sensors::requestDistance(int sensorId) {
 soglie_t Sensors::getSoglie() { 
     return soglie;
 }
-
