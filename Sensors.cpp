@@ -2,78 +2,79 @@
 #include <stdio.h>
 
 /**
- * Costruttore della classe Sensors.
+ * Class Sensors constructor.
  */
-Sensors::Sensors(soglie_t soglie, callback_t c) 
-    : soglie(soglie), callback(c) {}
+Sensors::Sensors(threshold_t threshold, callback_t c) 
+    : threshold(threshold), callback(c) {}
 
 
 /**
- * Funzione di inizializzazione.
- * Setup del CANBUS e invio delle soglie a tutti i sensori.
+ * Initialization function.
+ * CANBUS setup and sending of thresholds to every sensor.
  */
 void Sensors::begin() {  
   canBus.begin();
   canBus.setBaudRate(CAN_BAUDRATE);
   
-  setSoglie(soglie);
+  setThresholdAll(threshold);
 }
 
 /**
- * Funzione di update, da chiamare a ogni ciclo del loop.
- * Verifica se sono arrivati messaggi di allarme e chiama la funzione di callback.
+ * Update function, to be called for every loop cycle.
+ * Checks if any alarm has arrived and calls callback function.
  */
 void Sensors::update() {
   CAN_message_t msg;
 
   if(canBus.read(msg) && msg.id == MY_ID && 
-      (msg.buf[0] == ALARM_ROSSO || msg.buf[0] == ALARM_GIALLO)) {
+      (msg.buf[0] == ALARM_RED || msg.buf[0] == ALARM_YELLOW || msg.buf[0] == ALARM_LASER)) {
     callback(msg.buf[0],msg.buf[1]);
   }
 }
 
 /**
- * Funzione di impostazione delle soglie per tutti i sensori.
- * Aggiorna l'attributo privato e manda le nuove soglie a tutti i sensori.
+ * Function to set threshold for all sensors.
+ * Updates the private attribute and sends the threshold 
+ * to all the sensors.
  */
-void Sensors::setSoglie(soglie_t soglie) {
-    this->soglie = soglie;
+void Sensors::setThresholdAll(threshold_t threshold) {
+    this->threshold = threshold;
 
     for(int i = sensor1; i <= sensor8; i++) {
-        sendSoglia(i,soglie);
+        sendThreshold(i,threshold);
     }
 }
 
 /**
- * Funzione di invio soglia ad un sensore specifico.
+ * Private function to send the threshold to a specific sensor.
  */
-void Sensors::sendSoglia(int sensorId, soglie_t soglia) {
+void Sensors::sendThreshold(int sensorId, threshold_t th) {
   CAN_message_t msg;
 
   msg.id = sensorId;
-  msg.buf[0] = SET_SOGLIE;
-  msg.buf[1] = soglia.sogliaGiallo >> 8;
-  msg.buf[2] = soglia.sogliaGiallo;
-  msg.buf[3] = soglia.sogliaRosso >> 8;
-  msg.buf[4] = soglia.sogliaRosso;
+  msg.buf[0] = SET_THRESHOLD;
+  msg.buf[1] = th.yellowThreshold >> 8;
+  msg.buf[2] = th.yellowThreshold;
+  msg.buf[3] = th.redThreshold >> 8;
+  msg.buf[4] = th.redThreshold;
+  msg.buf[5] = th.laserThreshold >> 8;
+  msg.buf[6] = th.laserThreshold;
 
   canBus.write(msg);
 }
 
 /**
- * Funzione di richiesta distanze misurate ad un sensore specifico.
- * Invia un messaggio di richiesta e poi aspetta fino ad un tempo
- * REQ_TIMEOUT la risposta, altrimenti ritorna la costante di errore DIST_ERR.
+ * Function to request measured distance to a specific sensor.
+ * Sends a request message and then waits up to REQ_TIMEOUT milliseconds
+ * for the answer, else returns error constant DIST_ERR.
  * 
  * WARNING: 
- * la funzione è bloccante, se tra la richiesta di lettura della distanza 
- * e la ricezione della risposta dovessero arrivare messaggi di allarme
- * essi verrebbero ignorati.
- *
+ * the function is blocking, if alarm messages arrive between the request
+ * and the response, they would be discarded.
  */
 dist_t Sensors::requestDistance(int sensorId) {
   CAN_message_t msg;
-  dist_t distanza;
+  dist_t distance;
 
   msg.id = sensorId;
   msg.buf[0] = DIST_REQUEST;
@@ -88,15 +89,15 @@ dist_t Sensors::requestDistance(int sensorId) {
     }
   }
 
-  distanza.distLaser = msg.buf[2] << 8 | msg.buf[3];
-  distanza.distSonar = msg.buf[4] << 8 | msg.buf[5];
+  distance.distLaser = msg.buf[2] << 8 | msg.buf[3];
+  distance.distSonar = msg.buf[4] << 8 | msg.buf[5];
 
-  return distanza;
+  return distance;
 }
 
 /**
- * Funzione getter che ritorna le soglie attualmente impostate.
+ * Getter function to return actual threshold.
  */
-soglie_t Sensors::getSoglie() { 
-    return soglie;
+soglie_t Sensors::getThreshold() { 
+    return threshold;
 }
