@@ -7,7 +7,7 @@
 
 #include "FlexCAN_T4.h"
 
-#define CAN_BAUDRATE 1000000
+#define CAN_BAUDRATE 250000
 #define MY_ID 0x01
 #define REQ_TIMEOUT 500
 
@@ -48,7 +48,7 @@ class Sensors {
   public:
     Sensors(threshold_t threshold, callback_t c);
     void begin();
-    void setThresholdAll(threshold_t threshold);
+    void setThreshold(threshold_t threshold);
     void update();
     dist_t requestDistance(int sensorId);
     threshold_t getThreshold();
@@ -57,7 +57,7 @@ class Sensors {
     threshold_t threshold;
     callback_t callback;
     FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> canBus;
-    void sendThreshold(int sensorId, threshold_t threshold);
+    void sendThreshold();
 
 };
 

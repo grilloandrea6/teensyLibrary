@@ -16,7 +16,7 @@ void Sensors::begin() {
   canBus.begin();
   canBus.setBaudRate(CAN_BAUDRATE);
   
-  setThresholdAll(threshold);
+  sendThreshold();
 }
 
 /**
@@ -37,28 +37,25 @@ void Sensors::update() {
  * Updates the private attribute and sends the threshold 
  * to all the sensors.
  */
-void Sensors::setThresholdAll(threshold_t threshold) {
+void Sensors::setThreshold(threshold_t threshold) {
     this->threshold = threshold;
 
-    for(int i = sensor1; i <= sensor8; i++) {
-        sendThreshold(i,threshold);
-    }
+    sendThreshold();
 }
 
 /**
  * Private function to send the threshold to a specific sensor.
  */
-void Sensors::sendThreshold(int sensorId, threshold_t th) {
+void Sensors::sendThreshold() {
   CAN_message_t msg;
 
-  msg.id = sensorId;
   msg.buf[0] = SET_THRESHOLD;
-  msg.buf[1] = th.yellowThreshold >> 8;
-  msg.buf[2] = th.yellowThreshold;
-  msg.buf[3] = th.redThreshold >> 8;
-  msg.buf[4] = th.redThreshold;
-  msg.buf[5] = th.laserThreshold >> 8;
-  msg.buf[6] = th.laserThreshold;
+  msg.buf[1] = threshold.yellowThreshold >> 8;
+  msg.buf[2] = threshold.yellowThreshold;
+  msg.buf[3] = threshold.redThreshold >> 8;
+  msg.buf[4] = threshold.redThreshold;
+  msg.buf[5] = threshold.laserThreshold >> 8;
+  msg.buf[6] = threshold.laserThreshold;
 
   canBus.write(msg);
 }
@@ -98,6 +95,6 @@ dist_t Sensors::requestDistance(int sensorId) {
 /**
  * Getter function to return actual threshold.
  */
-soglie_t Sensors::getThreshold() { 
+threshold_t Sensors::getThreshold() { 
     return threshold;
 }
