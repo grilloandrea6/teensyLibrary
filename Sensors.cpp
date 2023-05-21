@@ -56,6 +56,7 @@ void Sensors::sendThreshold() {
   msg.buf[4] = threshold.redThreshold;
   msg.buf[5] = threshold.laserThreshold >> 8;
   msg.buf[6] = threshold.laserThreshold;
+  msg.len = 7;
 
   canBus.write(msg);
 }
@@ -75,6 +76,7 @@ dist_t Sensors::requestDistance(int sensorId) {
 
   msg.id = sensorId;
   msg.buf[0] = DIST_REQUEST;
+  msg.len = 1;
 
   canBus.write(msg);
 
