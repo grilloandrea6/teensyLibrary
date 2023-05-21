@@ -19,14 +19,18 @@ void setup() {
   Serial.println(checkSoglie.laserThreshold);
 
   // variazione delle soglie
-  sensors.setThreshold({.yellowThreshold = 7, .redThreshold = 9, .laserThreshold = 27});
+  sensors.setThreshold({.yellowThreshold = 1, .redThreshold = 2, .laserThreshold = 27});
 
   // richiesta distanze ad un sensore
   dist_t distanza = sensors.requestDistance(sensor1);
-  Serial.print("Distanze attualmente rilevate dal sensore 1: laser: ");
-  Serial.print(distanza.distLaser);
-  Serial.print(", sonar: ");
-  Serial.println(distanza.distSonar);
+  if(sensors.distEqual(distanza, DIST_ERR)) {
+    Serial.println("Non è stato possibile rilevare la distanza dal sensore 1.");
+  } else {
+    Serial.print("Distanze attualmente rilevate dal sensore 1: laser: ");
+    Serial.print(distanza.distLaser);
+    Serial.print(", sonar: ");
+    Serial.println(distanza.distSonar);
+  }
 }
 
 void loop() {

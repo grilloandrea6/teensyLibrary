@@ -79,8 +79,13 @@ dist_t Sensors::requestDistance(int sensorId) {
   canBus.write(msg);
 
   long startTime = millis();
+  bool flag = true;
 
-  while(!canBus.read(msg) && msg.id == MY_ID && msg.buf[0] == DIST_ANS && msg.buf[1] == sensorId) {
+  while(flag) {
+    if(canBus.read(msg) && msg.id == MY_ID && msg.buf[0] == DIST_ANS && msg.buf[1] == sensorId) {
+      flag = false;
+    }
+
     if(millis() - startTime > REQ_TIMEOUT) {
       return DIST_ERR;
     }
@@ -97,4 +102,14 @@ dist_t Sensors::requestDistance(int sensorId) {
  */
 threshold_t Sensors::getThreshold() { 
     return threshold;
+}
+
+
+/**
+ * Compare dist_t structures member by member.
+ */
+int Sensors::distEqual(dist_t a, dist_t b) {
+  if(a.distLaser == b.distLaser && a.distSonar == b.distSonar)
+    return 1;
+  return 0;
 }

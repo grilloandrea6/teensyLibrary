@@ -9,7 +9,7 @@
 
 #define CAN_BAUDRATE 250000
 #define MY_ID 0x01
-#define REQ_TIMEOUT 500
+#define REQ_TIMEOUT 1000
 
 enum {
   sensor1   = 0x11,
@@ -52,6 +52,7 @@ class Sensors {
     void update();
     dist_t requestDistance(int sensorId);
     threshold_t getThreshold();
+    int distEqual(dist_t a, dist_t b);
     
   private:
     threshold_t threshold;
