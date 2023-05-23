@@ -89,7 +89,8 @@ dist_t Sensors::requestDistance(int sensorId) {
     }
 
     if(millis() - startTime > REQ_TIMEOUT) {
-      return DIST_ERR;
+      distance.error = true;
+      return distance;
     }
   }
 
@@ -104,14 +105,4 @@ dist_t Sensors::requestDistance(int sensorId) {
  */
 threshold_t Sensors::getThreshold() { 
     return threshold;
-}
-
-
-/**
- * Compare dist_t structures member by member.
- */
-int Sensors::distEqual(dist_t a, dist_t b) {
-  if(a.distLaser == b.distLaser && a.distSonar == b.distSonar)
-    return 1;
-  return 0;
 }

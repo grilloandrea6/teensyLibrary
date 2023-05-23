@@ -23,7 +23,7 @@ void setup() {
 
   // richiesta distanze ad un sensore
   dist_t distanza = sensors.requestDistance(sensor1);
-  if(sensors.distEqual(distanza, DIST_ERR)) {
+  if(distanza.error) {
     Serial.println("Non è stato possibile rilevare la distanza dal sensore 1.");
   } else {
     Serial.print("Distanze attualmente rilevate dal sensore 1: laser: ");

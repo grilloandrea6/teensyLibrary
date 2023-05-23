@@ -38,9 +38,9 @@ typedef struct {
 
 typedef struct { 
   uint16_t distLaser, distSonar;
+  bool error = false;
 } dist_t;
 
-const dist_t DIST_ERR = {65535,65535};
 
 typedef void (*callback_t)(int sensor, int threshold);
 
@@ -52,7 +52,6 @@ class Sensors {
     void update();
     dist_t requestDistance(int sensorId);
     threshold_t getThreshold();
-    int distEqual(dist_t a, dist_t b);
     
   private:
     threshold_t threshold;
