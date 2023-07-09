@@ -33,7 +33,7 @@ enum {
 };
 
 typedef struct {
-  uint16_t yellowThreshold, redThreshold, laserThreshold;
+  uint16_t yellowThreshold, redThreshold, laserThreshold, alarmTimeout;
 } threshold_t;
 
 typedef struct { 
@@ -42,7 +42,7 @@ typedef struct {
 } dist_t;
 
 
-typedef void (*callback_t)(int sensor, int threshold);
+typedef void (*callback_t)(uint8_t sensor, uint8_t threshold, uint16_t distance);
 
 class Sensors {
   public:
@@ -50,7 +50,7 @@ class Sensors {
     void begin();
     void setThreshold(threshold_t threshold);
     void update();
-    dist_t requestDistance(int sensorId);
+    dist_t requestDistance(uint8_t sensorId);
     threshold_t getThreshold();
     
   private:

@@ -57,7 +57,8 @@ void Sensors::sendThreshold() {
   msg.buf[4] = threshold.redThreshold;
   msg.buf[5] = threshold.laserThreshold >> 8;
   msg.buf[6] = threshold.laserThreshold;
-  msg.len = 7;
+  msg.buf[7] = threshold.alarmTimeout / 20;
+  msg.len = 8;
 
   canBus.write(msg);
 }
@@ -71,7 +72,7 @@ void Sensors::sendThreshold() {
  * the function is blocking, if alarm messages arrive between the request
  * and the response, they would be discarded.
  */
-dist_t Sensors::requestDistance(int sensorId) {
+dist_t Sensors::requestDistance(uint8_t sensorId) {
   CAN_message_t msg;
   dist_t distance;
 
