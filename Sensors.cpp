@@ -26,9 +26,10 @@ void Sensors::begin() {
 void Sensors::update() {
   CAN_message_t msg;
 
-  if(canBus.read(msg) && msg.id == MY_ID && 
-      (msg.buf[0] == ALARM_RED || msg.buf[0] == ALARM_YELLOW || msg.buf[0] == ALARM_LASER)) {
-    callback(msg.buf[0],msg.buf[1]);
+  if(canBus.read(msg)) {
+    if( (msg.buf[1] == ALARM_RED || msg.buf[1] == ALARM_YELLOW || msg.buf[1] == ALARM_LASER)) {
+      callback(msg.buf[0], msg.buf[1], msg.buf[2] << 8 | msg.buf[3]);
+    }
   }
 }
 
@@ -84,7 +85,7 @@ dist_t Sensors::requestDistance(int sensorId) {
   bool flag = true;
 
   while(flag) {
-    if(canBus.read(msg) && msg.id == MY_ID && msg.buf[0] == DIST_ANS && msg.buf[1] == sensorId) {
+    if(canBus.read(msg) && msg.id == MY_ID && msg.buf[1] == DIST_ANS && msg.buf[0] == sensorId) {
       flag = false;
     }
 
