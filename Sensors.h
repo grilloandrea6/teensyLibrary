@@ -7,19 +7,19 @@
 
 #include "FlexCAN_T4.h"
 
-#define CAN_BAUDRATE 250000
-#define MY_ID 0x01
+#define CAN_BAUDRATE 125000
+#define MY_ID 0xAA
 #define REQ_TIMEOUT 1000
 
 enum {
-  sensor1   = 0x11,
-  sensor2   = 0x12,
-  sensor3   = 0x13,
-  sensor4   = 0x14,
-  sensor5   = 0x15,
-  sensor6   = 0x16,
-  sensor7   = 0x17,
-  sensor8   = 0x18,
+  sensor1   = 0x01,
+  sensor2,
+  sensor3,
+  sensor4,
+  sensor5,
+  sensor6,
+  sensor7,
+  sensor8
 };
 
 enum {
