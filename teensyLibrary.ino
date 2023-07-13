@@ -20,7 +20,7 @@ void setup() {
 
   // variazione delle soglie
   Serial.println("Impostazione nuove soglie.");
-  sensors.setThreshold({.yellowThreshold = 1500, .redThreshold = 1000, .laserThreshold = 1000, .alarmTimeout = 2000});
+  sensors.setThreshold({.yellowThreshold = 0, .redThreshold = 000, .laserThreshold = 4000, .alarmTimeout = 2000});
   // controllo le soglie gia impostate
   checkSoglie = sensors.getThreshold();
   Serial.print("Soglie impostate: giallo: ");
@@ -41,9 +41,22 @@ void setup() {
   }
 }
 
+
+
 void loop() {
   // da chiamare ad ogni ciclo di loop, verifica se arrivati nuovi messaggi di allarme
   sensors.update();
+dist_t distanza = sensors.requestDistance(sensor1);
+  if(distanza.error) {
+    Serial.println("Non è stato possibile rilevare la distanza dal sensore 1.");
+  } else {
+    Serial.print("Distanze attualmente rilevate dal sensore 1: laser: ");
+    Serial.print(distanza.distLaser);
+    Serial.print(", sonar: ");
+    Serial.println(distanza.distSonar);
+  }
+
+
 }
 
 // funzione di callback, richiamata quando si riceve un allarme

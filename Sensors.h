@@ -10,6 +10,7 @@
 #define CAN_BAUDRATE 125000
 #define MY_ID 0xAA
 #define REQ_TIMEOUT 1000
+#define THRESHOLD_SEND_TIMEOUT 2000
 
 enum {
   sensor1   = 0x01,
@@ -58,6 +59,7 @@ class Sensors {
     callback_t callback;
     FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> canBus;
     void sendThreshold();
+    long time;
 
 };
 

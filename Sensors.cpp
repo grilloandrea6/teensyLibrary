@@ -15,7 +15,7 @@ Sensors::Sensors(threshold_t threshold, callback_t c)
 void Sensors::begin() {  
   canBus.begin();
   canBus.setBaudRate(CAN_BAUDRATE);
-  
+  time = millis();
   sendThreshold();
 }
 
@@ -30,6 +30,12 @@ void Sensors::update() {
     if( (msg.buf[1] == ALARM_RED || msg.buf[1] == ALARM_YELLOW || msg.buf[1] == ALARM_LASER)) {
       callback(msg.buf[0], msg.buf[1], msg.buf[2] << 8 | msg.buf[3]);
     }
+  }
+
+  long actTime = millis();
+  if(actTime - time > THRESHOLD_SEND_TIMEOUT) {
+    sendThreshold();
+    time = actTime;
   }
 }
 
