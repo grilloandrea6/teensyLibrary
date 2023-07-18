@@ -10,7 +10,7 @@
 #define CAN_BAUDRATE 125000
 #define MY_ID 0xAA
 #define REQ_TIMEOUT 1000
-#define THRESHOLD_SEND_TIMEOUT 2000
+#define THRESHOLD_SEND_TIMEOUT 5000
 
 enum {
   sensor1   = 0x01,
