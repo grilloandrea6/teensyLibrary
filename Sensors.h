@@ -9,7 +9,7 @@
 
 #define CAN_BAUDRATE 125000
 #define MY_ID 0xAA
-#define REQ_TIMEOUT 1000
+#define REQ_TIMEOUT 200
 #define THRESHOLD_SEND_TIMEOUT 5000
 
 enum {
